@@ -1,25 +1,23 @@
-import { cn } from "@/lib/utils";
-import { Hexagon, Shuffle } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Shuffle } from "lucide-react";
+import { useEffect, useState } from "react";
 import Letter from "./letter";
 import { Button } from "./ui/button";
 
 interface ButtonProps {
-  middleLetter?: string;
-  letters?: string;
-  answers?: string[];
+  middleLetter: string;
+  letters: string;
+  answers: string[];
   onChangeWord: (word: string) => void;
 }
 
 export default function LetterButtons({
   middleLetter,
   letters,
+  answers,
   onChangeWord,
 }: ButtonProps) {
   const [words, setWords] = useState<string[]>([]);
   const [value, setValue] = useState<string>("");
-  const text = "selamik";
-  const mid = "e";
 
   useEffect(() => {
     shuffle();
@@ -55,10 +53,18 @@ export default function LetterButtons({
   };
 
   const shuffle = () => {
-    const splittedText = text?.split("");
-    const withoutMidLetter = splittedText.filter((lett) => lett !== mid);
+    const splittedText = letters?.split("");
+    const withoutMidLetter = splittedText.filter(
+      (lett) => lett !== middleLetter
+    );
     shuffleLetters(withoutMidLetter);
     setWords(withoutMidLetter);
+  };
+
+  const checkAnswer = () => {
+    const asd = answers.find((correct) => correct == value);
+
+    console.log(asd ? asd : "not found");
   };
 
   return (
@@ -71,7 +77,7 @@ export default function LetterButtons({
           <Letter letter={words[1]} onLetterClicked={updateWord} />
         </div>
         <div className="absolute top-28 left-32">
-          <Letter isMid letter={mid} onLetterClicked={updateWord} />
+          <Letter isMid letter={middleLetter} onLetterClicked={updateWord} />
         </div>
         <div className="absolute top-14 left-[216px]">
           <Letter letter={words[2]} onLetterClicked={updateWord} />
@@ -91,7 +97,7 @@ export default function LetterButtons({
             <Button onClick={shuffle} size="icon">
               <Shuffle className="w-[1.2rem] h-[1.2rem]" />
             </Button>
-            <Button>Enter</Button>
+            <Button onClick={checkAnswer}>Enter</Button>
           </div>
         </div>
       </div>
