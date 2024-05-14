@@ -2,6 +2,8 @@ import { Shuffle } from "lucide-react";
 import { useEffect, useState } from "react";
 import Letter from "./letter";
 import { Button } from "./ui/button";
+import { Toaster } from "./ui/toaster";
+import { useToast } from "./ui/use-toast";
 
 interface ButtonProps {
   middleLetter: string;
@@ -9,6 +11,7 @@ interface ButtonProps {
   answers: string[];
   onChangeWord: (word: string) => void;
   onCorrectAnswer: (isCorrect: boolean) => void;
+  onChangePoint: (point: number) => void;
 }
 
 export default function LetterButtons({
@@ -17,9 +20,12 @@ export default function LetterButtons({
   answers,
   onChangeWord,
   onCorrectAnswer,
+  onChangePoint,
 }: ButtonProps) {
   const [words, setWords] = useState<string[]>([]);
   const [value, setValue] = useState<string>("");
+  const [totalPoint, setTotalPoint] = useState<number>(0);
+  const { toast } = useToast();
 
   useEffect(() => {
     shuffle();
@@ -44,6 +50,10 @@ export default function LetterButtons({
     onChangeWord(value);
   }, [value, onChangeWord]);
 
+  useEffect(() => {
+    onChangePoint(totalPoint);
+  }, [onChangePoint, totalPoint]);
+
   const updateWord = (letter: string) => {
     setValue((prevValue) => prevValue + letter);
   };
@@ -63,23 +73,48 @@ export default function LetterButtons({
     setWords(withoutMidLetter);
   };
 
+  const pointCalculator = (answer: string) => {
+    const splittedAnswer = answer.split("");
+    const totalPoint = splittedAnswer.length;
+
+    return totalPoint;
+  };
+
   const checkAnswer = () => {
     const answer = answers.find((correct) => correct == value);
     const getCorrectAnswers = localStorage.getItem("correctAnswers");
     const answersToJSON = getCorrectAnswers
       ? JSON.parse(getCorrectAnswers)
       : [];
-    if (!answersToJSON.includes(answer)) {
+    if (!answersToJSON.includes(answer) && answer) {
       answersToJSON.push(answer);
       localStorage.setItem("correctAnswers", JSON.stringify(answersToJSON));
+      const point = pointCalculator(answer);
+      setTotalPoint((prev) => prev + point);
+      setValue("");
+      toast({
+        title: `Correct Added +${point} Point`,
+      });
     } else {
-      console.log("already added");
+      setValue("");
+      toast({
+        title: "This word already added.",
+      });
     }
-    answer ? onCorrectAnswer(true) : onCorrectAnswer(false);
+    if (answer) {
+      onCorrectAnswer(true);
+    } else {
+      onCorrectAnswer(false);
+      setValue("");
+      toast({
+        title: "Word is not found",
+      });
+    }
   };
 
   return (
     <div>
+      <Toaster />
       <div className="relative h-[400px] w-[350px]">
         <div className="absolute top-0 left-32">
           <Letter letter={words[0]} onLetterClicked={updateWord} />
