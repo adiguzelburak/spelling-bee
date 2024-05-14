@@ -8,6 +8,7 @@ interface ButtonProps {
   letters: string;
   answers: string[];
   onChangeWord: (word: string) => void;
+  onCorrectAnswer: (isCorrect: boolean) => void;
 }
 
 export default function LetterButtons({
@@ -15,6 +16,7 @@ export default function LetterButtons({
   letters,
   answers,
   onChangeWord,
+  onCorrectAnswer,
 }: ButtonProps) {
   const [words, setWords] = useState<string[]>([]);
   const [value, setValue] = useState<string>("");
@@ -62,9 +64,18 @@ export default function LetterButtons({
   };
 
   const checkAnswer = () => {
-    const asd = answers.find((correct) => correct == value);
-
-    console.log(asd ? asd : "not found");
+    const answer = answers.find((correct) => correct == value);
+    const getCorrectAnswers = localStorage.getItem("correctAnswers");
+    const answersToJSON = getCorrectAnswers
+      ? JSON.parse(getCorrectAnswers)
+      : [];
+    if (!answersToJSON.includes(answer)) {
+      answersToJSON.push(answer);
+      localStorage.setItem("correctAnswers", JSON.stringify(answersToJSON));
+    } else {
+      console.log("already added");
+    }
+    answer ? onCorrectAnswer(true) : onCorrectAnswer(false);
   };
 
   return (
