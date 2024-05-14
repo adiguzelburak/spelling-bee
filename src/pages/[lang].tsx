@@ -2,6 +2,14 @@ import LetterButtons from "@/components/letter-button";
 import Timer from "@/components/timer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Toaster } from "@/components/ui/toaster";
 import { DataType } from "@/lib/types";
 import { Gauge, WholeWord } from "lucide-react";
@@ -9,12 +17,13 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Play({ repo }: { repo: DataType }) {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [timer, setTimer] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
   const [totalPoint, setTotalPoint] = useState<number>(0);
   const [correctAnswers, setCorrectAnswers] = useState<string[]>([]);
 
@@ -27,7 +36,9 @@ export default function Play({ repo }: { repo: DataType }) {
   };
 
   const handleChangePoint = () => {
-    const getCorrectAnswers = localStorage.getItem("correctAnswers");
+    const getCorrectAnswers = localStorage.getItem(
+      `correctAnswers-${router.query.lang}`
+    );
     if (getCorrectAnswers) {
       setTotalPoint(pointCalculator(JSON.parse(getCorrectAnswers)));
       setCorrectAnswers(JSON.parse(getCorrectAnswers));
@@ -43,14 +54,25 @@ export default function Play({ repo }: { repo: DataType }) {
     return total;
   };
 
-  useEffect(() => {
-    localStorage.setItem("correctAnswers", "");
-    setCorrectAnswers([]);
-    setTotalPoint(0);
-  }, [router.query.lang]);
+  const handleFinishTime = () => {
+    localStorage.setItem(`correctAnswers-${router.query.lang}`, "");
+    setIsOpen(false);
+    router.reload();
+  };
 
   return (
-    <div className="w-[400px]  px-4">
+    <div className="w-[400px] px-4">
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Time is Finished.</DialogTitle>
+            <DialogDescription>Your score is : {totalPoint}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={handleFinishTime}>Play Again</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <div className=" grid grid-cols-3 gap-1">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -65,7 +87,7 @@ export default function Play({ repo }: { repo: DataType }) {
         <Timer
           isAnsweredCorrect={timer}
           totalPoint={totalPoint}
-          timeFinish={() => null}
+          timeFinish={() => setIsOpen(true)}
         />
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

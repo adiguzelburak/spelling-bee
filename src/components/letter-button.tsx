@@ -4,6 +4,7 @@ import Letter from "./letter";
 import { Button } from "./ui/button";
 import { Toaster } from "./ui/toaster";
 import { useToast } from "./ui/use-toast";
+import { useRouter } from "next/router";
 
 interface ButtonProps {
   middleLetter: string;
@@ -26,6 +27,7 @@ export default function LetterButtons({
   const [value, setValue] = useState<string>("");
   const [totalPoint, setTotalPoint] = useState<number>(0);
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     shuffle();
@@ -82,13 +84,18 @@ export default function LetterButtons({
 
   const checkAnswer = () => {
     const answer = answers.find((correct) => correct == value);
-    const getCorrectAnswers = localStorage.getItem("correctAnswers");
+    const getCorrectAnswers = localStorage.getItem(
+      `correctAnswers-${router.query.lang}`
+    );
     const answersToJSON = getCorrectAnswers
       ? JSON.parse(getCorrectAnswers)
       : [];
     if (!answersToJSON.includes(answer) && answer) {
       answersToJSON.push(answer);
-      localStorage.setItem("correctAnswers", JSON.stringify(answersToJSON));
+      localStorage.setItem(
+        `correctAnswers-${router.query.lang}`,
+        JSON.stringify(answersToJSON)
+      );
       const point = pointCalculator(answer);
       setTotalPoint((prev) => prev + point);
       setValue("");
@@ -114,8 +121,8 @@ export default function LetterButtons({
 
   return (
     <div>
-      <Toaster />
       <div className="relative h-[400px] w-[350px]">
+        <Toaster />
         <div className="absolute top-0 left-32">
           <Letter letter={words[0]} onLetterClicked={updateWord} />
         </div>

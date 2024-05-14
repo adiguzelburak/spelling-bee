@@ -24,6 +24,7 @@ export default function Timer({
       setTime((time) => {
         if (time === 0) {
           clearInterval(timer);
+          timeFinish();
           return 0;
         } else {
           return time - 1;
