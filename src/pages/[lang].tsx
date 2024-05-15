@@ -67,7 +67,7 @@ export default function Play({ repo }: { repo: DataType }) {
   }, [router.query.lang, i18n]);
 
   return (
-    <div className="w-[400px] px-4">
+    <div className="w-[400px] px-4 mx-auto lg:mt-8 mt-2">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="w-[400px]">
           <DialogHeader>
@@ -81,7 +81,7 @@ export default function Play({ repo }: { repo: DataType }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <div className=" grid grid-cols-3 gap-1">
+      <div className=" grid grid-cols-3 gap-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t("score")}</CardTitle>
@@ -114,7 +114,7 @@ export default function Play({ repo }: { repo: DataType }) {
                 alt="flag"
                 width={40}
                 height={20}
-                className="w-fit h-5 mt-2"
+                className="w-fit h-5 mt-2 rounded-sm"
               />
             </Link>
           </CardContent>
@@ -125,9 +125,9 @@ export default function Play({ repo }: { repo: DataType }) {
             <WholeWord className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-base font-bold grid grid-cols-6">
+            <div className="text-base font-bold flex items-center">
               {correctAnswers.map((word, index) => (
-                <div key={index}>{word} ,</div>
+                <div key={index}>{word},</div>
               ))}
             </div>
           </CardContent>
@@ -149,7 +149,9 @@ export default function Play({ repo }: { repo: DataType }) {
 
 export const getServerSideProps = (async (context: any) => {
   // Fetch data from external API
-  const res = await fetch(`http://localhost:3003/${context.params.lang}`);
+  const res = await fetch(
+    `https://spelling-bee-be-0accb579b523.herokuapp.com/${context.params.lang}`
+  );
   const repo: DataType = await res.json();
   // Pass data to the page via props
   return { props: { repo } };
