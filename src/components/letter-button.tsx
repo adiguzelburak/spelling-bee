@@ -113,11 +113,18 @@ export default function LetterButtons({
     if (answer) {
       onCorrectAnswer(true);
     } else {
+      if (value.length < 4) {
+        toast({
+          title: "Word must be least 4 character",
+        });
+      } else {
+        setValue("");
+        toast({
+          title: "Word is not found",
+        });
+      }
       onCorrectAnswer(false);
       setValue("");
-      toast({
-        title: "Word is not found",
-      });
     }
   };
 
