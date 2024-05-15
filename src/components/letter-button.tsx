@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Toaster } from "./ui/toaster";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 interface ButtonProps {
   middleLetter: string;
@@ -28,6 +29,7 @@ export default function LetterButtons({
   const [totalPoint, setTotalPoint] = useState<number>(0);
   const { toast } = useToast();
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     shuffle();
@@ -146,11 +148,11 @@ export default function LetterButtons({
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           <div className="flex items-center space-x-3">
-            <Button onClick={deleteLetter}>Delete</Button>
+            <Button onClick={deleteLetter}>{t("delete")}</Button>
             <Button onClick={shuffle} size="icon">
               <Shuffle className="w-[1.2rem] h-[1.2rem]" />
             </Button>
-            <Button onClick={checkAnswer}>Enter</Button>
+            <Button onClick={checkAnswer}>{t("enter")}</Button>
           </div>
         </div>
       </div>

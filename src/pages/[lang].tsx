@@ -17,10 +17,12 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Play({ repo }: { repo: DataType }) {
   const router = useRouter();
+  const { t, i18n } = useTranslation();
   const [value, setValue] = useState("");
   const [timer, setTimer] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -60,23 +62,29 @@ export default function Play({ repo }: { repo: DataType }) {
     router.reload();
   };
 
+  useEffect(() => {
+    i18n.changeLanguage(router.query.lang?.toString());
+  }, [router.query.lang, i18n]);
+
   return (
     <div className="w-[400px] px-4">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="w-[400px]">
           <DialogHeader>
-            <DialogTitle>Time is Finished.</DialogTitle>
-            <DialogDescription>Your score is : {totalPoint}</DialogDescription>
+            <DialogTitle>{t("timeFinish")}</DialogTitle>
+            <DialogDescription>
+              {t("yourScore")} : {totalPoint}
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={handleFinishTime}>Play Again</Button>
+            <Button onClick={handleFinishTime}>{t("playAgain")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       <div className=" grid grid-cols-3 gap-1">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Score</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("score")}</CardTitle>
             <Gauge className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -91,7 +99,9 @@ export default function Play({ repo }: { repo: DataType }) {
         />
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Language</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("language")}
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-2">
             <Link
@@ -100,7 +110,7 @@ export default function Play({ repo }: { repo: DataType }) {
               href={router.query.lang === "en" ? "/tr" : "/en"}
             >
               <Image
-                src={router.query.lang === "en" ? "/tr.png" : "/us.png"}
+                src={router.query.lang === "en" ? "/us.png" : "/tr.png"}
                 alt="flag"
                 width={40}
                 height={20}
@@ -111,7 +121,7 @@ export default function Play({ repo }: { repo: DataType }) {
         </Card>
         <Card className="col-span-3">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Words</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("words")}</CardTitle>
             <WholeWord className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
