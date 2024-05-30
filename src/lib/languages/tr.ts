@@ -10,5 +10,9 @@ export default {
     yourScore: "Skorunuz",
     playAgain: "Yeniden Oyna",
     enter: "Ekle",
+    contributeProject: "Katkıda Bulun!",
+    howToPlay: "Nasıl Oynanır?",
+    rule1: "Bildiğin her doğru cevap için 15 saniye kazanırsın.",
+    rule2: "Kelimedeki harf sayısı kadar puan kazanırsın.",
   },
 };

@@ -1,4 +1,4 @@
-import { Shuffle } from "lucide-react";
+import { Info, Shuffle } from "lucide-react";
 import { useEffect, useState } from "react";
 import Letter from "./letter";
 import { Button } from "./ui/button";
@@ -6,6 +6,14 @@ import { Toaster } from "./ui/toaster";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface ButtonProps {
   middleLetter: string;
@@ -155,6 +163,22 @@ export default function LetterButtons({
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           <div className="flex items-center space-x-3">
+            <Dialog>
+              <DialogTrigger>
+                <Info className="w-[1.2rem] h-[1.2rem]" />
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{t("howToPlay")}</DialogTitle>
+                  <DialogDescription className="text-sm">
+                    <div>1- {t("rule1")}</div>
+                    <div>2- {t("rule2")}</div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
             <Button onClick={deleteLetter}>{t("delete")}</Button>
             <Button onClick={shuffle} size="icon">
               <Shuffle className="w-[1.2rem] h-[1.2rem]" />
