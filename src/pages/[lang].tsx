@@ -1,4 +1,5 @@
 import LetterButtons from "@/components/letter-button";
+import MyHead from "@/components/myhead";
 import Timer from "@/components/timer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -66,6 +67,7 @@ export default function Play({ repo }: { repo: DataType }) {
 
   return (
     <div className="w-[400px] px-4 mx-auto lg:mt-8 mt-2">
+      <MyHead />
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="w-[400px]">
           <DialogHeader>
