@@ -34,7 +34,7 @@ export default function MyHead() {
       />
       <meta property="twitter:url" content="https://www.spellsbee.net/" />
       <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:image" content="/og-image.png" />
+      <meta property="twitter:image" content="/spell.webp" />
     </Head>
   );
 }
